@@ -1,0 +1,53 @@
+version: '3.4'
+
+services:
+  img-zookeeper:
+    image: confluentinc/cp-zookeeper
+    hostname: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_DATA_DIR: /chroot/path
+    networks:
+      - myNetwork
+
+  img-kafka:
+    image: confluentinc/cp-kafka
+    hostname: kafka
+    depends_on:
+      - img-zookeeper
+    ports:
+      - 9092:9092
+    networks:
+      - myNetwork
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT:  zookeeper:2181/chroot/path
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'false'
+      KAFKA_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_AUTO_LEADER_REBALANCE_ENABLE: 'false'
+  
+networks:
+  myNetwork:
+
+
+  # img-schema-registry:
+  #   image: confluentinc/cp-schema-registry
+  #   networks:
+  #     - kafka-tiw-network
+  #   ports:
+  #     - '8081:8081'
+  #   depends_on:
+  #     - img-zookeeper
+  #     - img-kafka
+  #   environment:
+  #     SCHEMA_REGISTRY_HOST_NAME: schema-registry
+  #     SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: img-zookeeper:2181
+  #     SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: INTERNAL://img-kafka:29092
+
+  
+
