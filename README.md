@@ -39,5 +39,5 @@ start ZooKeeper: bin/zkServer.sh start
 /usr/bin ->  ./bin/kafka-topics --create --topic CountryTopic --boots
 trap-server kafka:29092
 
-mvn complie
+mvn clean compile
 mvn exec:java '-Dexec.mainClass=my.own.packages.MyProducer'
