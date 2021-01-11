@@ -31,23 +31,24 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
       KAFKA_AUTO_LEADER_REBALANCE_ENABLE: 'false'
   
+  img-schema-registry:
+    image: confluentinc/cp-schema-registry
+    networks:
+      - myNetwork
+    ports:
+      - '8081:8081'
+    hostname: schema-registry
+    depends_on:
+      - img-zookeeper
+      - img-kafka
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:29092
+      SCHEMA_REGISTRY_LISTENERS: http://schema-registry:8081
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry:8081
+  
 networks:
   myNetwork:
-
-
-  # img-schema-registry:
-  #   image: confluentinc/cp-schema-registry
-  #   networks:
-  #     - kafka-tiw-network
-  #   ports:
-  #     - '8081:8081'
-  #   depends_on:
-  #     - img-zookeeper
-  #     - img-kafka
-  #   environment:
-  #     SCHEMA_REGISTRY_HOST_NAME: schema-registry
-  #     SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: img-zookeeper:2181
-  #     SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: INTERNAL://img-kafka:29092
 
   
 

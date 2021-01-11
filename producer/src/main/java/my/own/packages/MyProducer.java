@@ -6,7 +6,6 @@ Simple Producer
 package my.own.packages;
 
 import com.github.javafaker.Faker;
-import java.lang.*;
 import java.util.*;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -45,6 +44,8 @@ public class MyProducer {
             } catch (InterruptedException ex) {
                 Thread.currentThread().interrupt();
             }
+
+            Runtime.getRuntime().addShutdownHook(new Thread(producer::close));
         }
         
 
