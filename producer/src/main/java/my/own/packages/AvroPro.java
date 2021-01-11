@@ -13,8 +13,6 @@ import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import com.github.javafaker.Faker;
 import com.github.javafaker.GameOfThrones;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -48,43 +46,43 @@ public class AvroPro {
 
         String topic = "GoTCharacter";
         int th = 1;
-
-        Schema schema;
-        try {
-            schema = new Schema.Parser().parse(new File("/Users/USER/Desktop/kafkaProject/producer/src/main/avro/schema1.avsc"));
         
-            while (true) {
+        String userSchema = "{\"namespace\": \"namespace.avro\", " +
+            "\"type\": \"record\"," +
+            "\"name\": \"GoTCharacter\"," +
+            "\"fields\": [" +
+                "{\"name\": \"name\", \"type\": \"string\", \"doc\": \"a GameofTrone character's name\", \"default\": \"UNKNOWN\"}," +
+                "{\"name\": \"house\", \"type\": [\"null\",\"string\"], \"default\": null}," +
+                "{\"name\": \"quote\", \"type\": [\"null\",\"string\"], \"default\": null}" +
+            "]}";
+        Schema.Parser parser = new Schema.Parser();
+        Schema schema = parser.parse(userSchema);
 
-                GameOfThrones fakeChar = new Faker().gameOfThrones();
-                GenericRecord myGotAvro = new GenericData.Record(schema);
-                myGotAvro.put("name", fakeChar.character());
-                myGotAvro.put("house", fakeChar.house());
-                myGotAvro.put("quote", fakeChar.quote());
-               
-                ProducerRecord<String, GenericRecord> record = new ProducerRecord<>(topic,"record"+th,myGotAvro);
-                th ++;
-                try {
-                    producer.send(record);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } 
-    
-                try{
-                    TimeUnit.SECONDS.sleep(2L);
-                } catch (InterruptedException ex) {
-                    Thread.currentThread().interrupt();
-                }
-    
-                Runtime.getRuntime().addShutdownHook(new Thread(producer::close));
+        while (true) {
+
+            GameOfThrones fakeChar = new Faker().gameOfThrones();
+            GenericRecord myGotAvro = new GenericData.Record(schema);
+            myGotAvro.put("name", fakeChar.character());
+            myGotAvro.put("house", fakeChar.house());
+            myGotAvro.put("quote", fakeChar.quote());
+            
+            ProducerRecord<String, GenericRecord> record = new ProducerRecord<>(topic,"record"+th,myGotAvro);
+            th ++;
+            try {
+                producer.send(record);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } 
+
+            try {
+                TimeUnit.SECONDS.sleep(2L);
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
             }
-    
-        } catch (IOException e1) {
-            System.out.printf("file error\n");
-            e1.printStackTrace();
-        }
-                
+
+            Runtime.getRuntime().addShutdownHook(new Thread(producer::close));
+        }                
         
     }
-
 
 }

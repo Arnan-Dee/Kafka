@@ -103,20 +103,35 @@ At the core, transactional guarantees enable applications to produce to multiple
 Further, since consumer progress is recorded as a write to the offsets topic, the above capability is leveraged to enable applications to batch consumed and produced messages into a single atomic unit, ie. a set of messages may be considered consumed only if the entire ‘consume-transform-produce’ executed in its entirety.
 
 V1.0
+
 Simple Producer/Consumer 
+
 V1.1
+
 Simple Producer/Consumer with manually commit offsets
+
 V1.2
+
 Producer/Consumer with Arvo/JSON Serde and Schema registry
+
 V1.3
+
 Producer/Consumer with Exactly-Once Guarantee.
+
 V2.0
-Simple Stream application, simple agg, stateless
+
+Simple Stream application, simple agg, stateless.
+
 V2.1
-Simple Stream application, simple agg, stateful
+
+Simple Stream application, simple agg, stateful.
+
 V2.2
-Simple Stream application, windowed operation
+
+Simple Stream application, windowed operation.
+
 V3.0
+
 Stream application with DB(data enrichment)
 
 
