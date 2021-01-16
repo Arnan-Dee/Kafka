@@ -1,39 +1,37 @@
-// perform simple, state-less transformations via map functions.
-// 1) Start Zookeeper and Kafka.
-// 2) Create the input and output topics used by this example.
-
-// $ bin/kafka-topics --create --topic TextLinesTopic \
-//                    --zookeeper localhost:2181 --partitions 1 --replication-factor 1
-// $ bin/kafka-topics --create --topic UppercasedTextLinesTopic \
-//                    --zookeeper localhost:2181 --partitions 1 --replication-factor 1
-// $ bin/kafka-topics --create --topic OriginalAndUppercasedTopic \
-//                    --zookeeper localhost:2181 --partitions 1 --replication-factor 1
-
-// 3) Start this example application either in your IDE or on the command line.
-// 4) Write some input data to the source topic (e.g. via {@code kafka-console-producer}). The already
-// running example application (step 3) will automatically process this input data and write the
-// results to the output topics.
-
-// Start the console producer. You can then enter input data by writing some line of text, followed by ENTER:
-// #
-// #   hello kafka streams<ENTER>
-// #   all streams lead to kafka<ENTER>
-// #
-// # Every line you enter will become the value of a single Kafka message.
-// $ bin/kafka-console-producer --broker-list localhost:9092 --topic TextLinesTopic
-// 5) Inspect the resulting data in the output topics, e.g. via {@code kafka-console-consumer}.
-
-// $ bin/kafka-console-consumer --topic UppercasedTextLinesTopic --from-beginning \
-//                              --bootstrap-server localhost:9092
-// $ bin/kafka-console-consumer --topic OriginalAndUppercasedTopic --from-beginning \
-//                              --bootstrap-server localhost:9092 --property print.key=true
-
-// You should see output data similar to:
-
-// HELLO KAFKA STREAMS
-// ALL STREAMS LEAD TO KAFKA
-
 package my.own.packages;
+
+/*
+perform simple, state-less transformations via map functions.
+1) Start Zookeeper and Kafka.
+2) Create the input and output topics used by this example.
+
+$ /bin/kafka-topics --create --topic TextLinesTopic \
+                   --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
+$ /bin/kafka-topics --create --topic UppercasedTextLinesTopic \
+                   --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
+
+3) Start this example application either in your IDE or on the command line.
+4) Write some input data to the source topic (e.g. via {@code kafka-console-producer}). The already
+running example application (step 3) will automatically process this input data and write the
+results to the output topics.
+$   /bin/kafka-console-producer --bootstrap-server kafka:29092 --topic TextLinesTopic
+
+Start the console producer. You can then enter input data by writing some line of text, followed by ENTER:
+#
+#   hello kafka streams<ENTER>
+#   all streams lead to kafka<ENTER>
+#
+# Every line you enter will become the value of a single Kafka message.
+$ bin/kafka-console-producer --broker-list localhost:9092 --topic TextLinesTopic
+5) Inspect the resulting data in the output topics, e.g. via {@code kafka-console-consumer}.
+
+$ /bin/kafka-console-consumer --topic UppercasedTextLinesTopic --from-beginning \
+                             --bootstrap-server kafka:29092
+
+You should see output data similar to:
+#   HELLO KAFKA STREAMS
+#   ALL STREAMS LEAD TO KAFKA
+*/
 
 import java.util.Arrays;
 import java.util.List;
@@ -49,8 +47,8 @@ import org.apache.kafka.streams.kstream.Produced;
 
 public class streamMap {
 
-    static final String inputTopic = "map-input";
-    static final String outputTopic = "map-output";
+    static final String inputTopic = "TextLinesTopic";
+    static final String outputTopic = "UppercasedTextLinesTopic";
 
     // list of Kafka servers
     static final List<String> servers = Arrays.asList("localhost:9092");
