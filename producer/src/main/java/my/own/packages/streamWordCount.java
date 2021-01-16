@@ -14,33 +14,34 @@ import java.util.Properties;
 import java.lang.String;
 
 
+/*
+the input stream reads from a topic named "streams-plaintext-input", where the values of
+messages represent lines of text; and the histogram output is written to topic
+"streams-wordcount-output", where each record is an updated count of a single word, i.e. {@code word (String) -> currentCount (Long)}.
 
-// the input stream reads from a topic named "streams-plaintext-input", where the values of
-// messages represent lines of text; and the histogram output is written to topic
-// "streams-wordcount-output", where each record is an updated count of a single word, i.e. {@code word (String) -> currentCount (Long)}.
+Note: Before running this example you must 
+1) create the source topic (e.g. via {@code kafka-topics --create ...}), then 
+2) start this example and 
+3) write some data to the source topic (e.g. via {@code kafka-console-producer}).
+Otherwise you won't see any data arriving in the output topic.
+Inspect the resulting data in the output topic, e.g. via {@code kafka-console-consumer}.
 
-// Note: Before running this example you must 
-// 1) create the source topic (e.g. via {@code kafka-topics --create ...}), then 
-// 2) start this example and 
-// 3) write some data to the source topic (e.g. via {@code kafka-console-producer}).
-// Otherwise you won't see any data arriving in the output topic.
-// Inspect the resulting data in the output topic, e.g. via {@code kafka-console-consumer}.
+$ /bin/kafka-topics --create --topic streams-plaintext-input \
+        --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
+$ /bin/kafka-topics --create --topic streams-wordcount-output \
+        --bootstrap-server kafka:29092 --partitions 1 --replication-factor 1
 
-//  $ bin/kafka-topics --create --topic streams-plaintext-input \
-//             --zookeeper localhost:2181 --partitions 1 --replication-factor 1
-//  $ bin/kafka-topics --create --topic streams-wordcount-output \
-//             --zookeeper localhost:2181 --partitions 1 --replication-factor 1
+$ /bin/kafka-console-producer --bootstrap-server kafka:29092 --topic streams-plaintext-input
 
-// $ bin/kafka-console-producer --broker-list localhost:9092 --topic streams-plaintext-input
+$ /bin/kafka-console-consumer --topic streams-wordcount-output --from-beginning \
+                            --bootstrap-server kafka:29092 \
+                            --property print.key=true \
+                            --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer
 
-// $ bin/kafka-console-consumer --topic streams-wordcount-output --from-beginning \
-//                             --bootstrap-server localhost:9092 \
-//                             --property print.key=true \
-//                             --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer
-
-// Note: The output you see is indeterminate the exact output sequence will depend on how fast you
-// type the input massages. This is because Kafka Streams use Record caches to store records in memory
-// to reduce the number of requests going to a state store. The Record caches evolve `CACHE_MAX_BYTES_BUFFERING_CONFIG`
+Note: The output you see is indeterminate the exact output sequence will depend on how fast you
+type the input massages. This is because Kafka Streams use Record caches to store records in memory
+to reduce the number of requests going to a state store. The Record caches evolve `CACHE_MAX_BYTES_BUFFERING_CONFIG`
+*/
 
 public class  streamWordCount{
 
